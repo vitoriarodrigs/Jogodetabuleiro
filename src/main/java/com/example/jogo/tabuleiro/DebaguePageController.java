@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -22,7 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class BoardPageController {
+public class DebaguePageController {
+    @FXML
+    private TextField casasselecionadas;
     @FXML
     private Label jogadoratual;
     @FXML
@@ -47,11 +50,11 @@ public class BoardPageController {
 
     @FXML
     public void initialize() {
-
+       // jogadoratual.setText(jogadores.get(currentPlayerIndex).getName());
         for (int i = 0; i < Casas.getChildren().size(); i++) {
             if (Casas.getChildren().get(i) instanceof Circle) {
                 Circle casa = (Circle) Casas.getChildren().get(i);
-                casa.setVisible(false);
+                casa.setVisible(false); // Casas ficam invisíveis o tempo todo
                 String id = casa.getId();
                 if (id != null) {
                     try {
@@ -74,11 +77,11 @@ public class BoardPageController {
                 Player jogador = jogadores.get(i);
                 Circle peca = circulos[i];
                 pecasJogadores.put(jogador, peca);
-                peca.setVisible(true);
+                peca.setVisible(true);  // Torna a peça visível
                 peca.setFill(jogador.getColor());
                 atualizarPosicaoJogador(jogador, 0);
             } else {
-                circulos[i].setVisible(false);
+                circulos[i].setVisible(false);  // Torna a peça invisível se o jogador não estiver na partida
             }
         }
     }
@@ -92,18 +95,22 @@ public class BoardPageController {
             currentPlayerIndex = (currentPlayerIndex + 1) % jogadores.size();
         }
 
+        if (casasselecionadas.getText().isEmpty()){
+            return;
+        }
+
         Player jogadorAtual = jogadores.get(currentPlayerIndex);
-        int resultadoDados = jogadorAtual.rollDice();
+        int resultadoDados = Integer.parseInt(casasselecionadas.getText());
         int novaPosicao = jogadorAtual.getPosition() + resultadoDados;
 
         if (novaPosicao > 40) {
             novaPosicao = 40;
         }
 
-        jogadorAtual.setPosition(novaPosicao);
-        atualizarPosicaoJogador(jogadorAtual, novaPosicao);
+        jogadorAtual.setPosition(resultadoDados);
+        atualizarPosicaoJogador(jogadorAtual, resultadoDados);
 
-        // Verifica as casas especiais após a rolagem de dados
+        // Verifica as casas especiais após a rolagem
         verificarCasasEspeciais(jogadorAtual, resultadoDados,novaPosicao);
 
         if (novaPosicao == 40) {
@@ -113,7 +120,7 @@ public class BoardPageController {
 
 
             PauseTransition pausa = new PauseTransition(Duration.seconds(1));  // 1 segundo de pausa
-            pausa.setOnFinished(event -> transferirVitoria(jogadorAtual));  // transferência após a pausa
+            pausa.setOnFinished(event -> transferirVitoria(jogadorAtual));  // Chama o método de transferência após a pausa
             pausa.play();  // Executa a pausa
 
         }
@@ -163,16 +170,16 @@ public class BoardPageController {
             case 15:
             case 30:
                 if (!(jogador instanceof UnluckyPlayer)) {
-                    jogador.setPosition(jogador.getPosition() + 3);
+                    jogador.setPosition(jogador.getPosition() + 3); // Avança 3 casas, exceto se for um jogador azarado
                     atualizarPosicaoJogador(jogador, jogador.getPosition());
-                    exibirMensagem(jogador.getName() + " avançou 3 casas na Casa da Sorte!");
+                    exibirMensagem(jogador.getName() + " avançou 3 casas \n na Casa da Sorte!");
                 }
                 break;
 
             case 10:
             case 25:
             case 38:
-                jogador.setSkippingNextTurn(true);  //  pula a próxima rodada
+                jogador.setSkippingNextTurn(true);  // pula a próxima rodada
                 exibirMensagem(jogador.getName() + " caiu em uma casa especial e \n perderá a próxima rodada.");
                 currentPlayerIndex = (currentPlayerIndex + 1) % jogadores.size();  // Pula a vez do jogador
 
@@ -209,7 +216,7 @@ public class BoardPageController {
                 break;
             case 1:
                 jogador.changeType("Unlucky");
-                exibirMensagem(jogador.getName() + " agora é um Jogador Com Sorte !");
+                exibirMensagem(jogador.getName() + " agora é um Jogador Com Sorte!");
                 break;
             case 2:
                 jogador.changeType("Normal");

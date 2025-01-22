@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.jogo.SecondPageController">
+
+    <children>
+      <Pane prefHeight="200.0" prefWidth="200.0" />
+        <ImageView fx:id="imageView" fitHeight="500.0" fitWidth="800.0" preserveRatio="false">
+            <image>
+                <!-- Use o caminho correto da imagem, que deve ser relativo a src/main/resources -->
+                <Image url="@../../../jogadores.png" />
+            </image>
+        </ImageView>
+
+        <!-- VBox com outros componentes -->
+        <VBox alignment="CENTER" spacing="20.0">
+            <children>
+            <Button fx:id="debugButton" disable="true" mnemonicParsing="false" onAction="#debagButtonAction" text="Debug" visible="false" />
+                <!-- ComboBox para selecionar o tipo de jogador -->
+                <ComboBox fx:id="comboBoxJogadores" prefWidth="150.0" promptText="Selecione o tipo de jogador" />
+
+                <!-- ColorPicker para escolher a cor do jogador -->
+                <ColorPicker fx:id="colorPicker" prefWidth="150.0" />
+
+                <!-- HBox para os botões -->
+                <HBox alignment="CENTER" spacing="10">
+                    <children>
+                        <!-- Botão para adicionar o jogador -->
+                        <Button fx:id="adicionarJogadorButton" onAction="#onAdicionarJogador" text="Adicionar Jogador" />
+
+                        <!-- Botão para iniciar o jogo -->
+                        <Button fx:id="jogarButton" disable="true" onAction="#handleplayButtonAction" text="Jogar" visible="false" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>
